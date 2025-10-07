@@ -8,15 +8,10 @@
       "unit": "pcs"
     },
     {
-      "name": "Indomie Goreng 110gr",
-      "price": 2500,
-      "stock": 1000,
-      "unit": "pcs"
-    },
-    {
-      "name": "Indomie Goreng 110gr",
-      "price": 2500,
-      "stock": 1000,
+      "id": "0c9f",
+      "name": "Indomie Ayam Bawang 90gr",
+      "price": 1950,
+      "stock": 3000,
       "unit": "pcs"
     }
   ]
