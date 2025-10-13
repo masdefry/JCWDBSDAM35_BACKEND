@@ -12,6 +12,7 @@ app.get('/', (_: Request, res: Response) => {
 /* app.use -> Middleware (Application Level) */
 app.use('/api/products', productsRouter);
 
+
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
 });
