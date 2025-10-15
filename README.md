@@ -1,6 +1,6 @@
 Hello, Full Stack Web Development Students✌️!
 
-🧑‍💻 How to Setup Express Typescript & RDBMS (MySql/Postgresql)?
+🧑‍💻 How to Setup Express Typescript?
 
     1. Create New Directory for ExpressTS Projects
 
