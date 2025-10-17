@@ -1,0 +1,146 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String @id @default(uuid())
+  fullName    String @db.VarChar(50)
+  email       String @db.VarChar(100)
+  password    String
+  phoneNumber String @db.VarChar(15)
+  role        UserRole  @default(USER)
+
+  bookings Booking[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@map("users")
+}
+
+enum UserRole{
+  USER 
+  ADMIN
+}
+
+model City {
+  id      String @id @default(uuid())
+  city    String @db.VarChar(100)
+  country String @db.VarChar(100)
+
+  originRoute      Route[] @relation("OriginCity")
+  destinationRoute Route[] @relation("DestinationCity")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@map("city")
+}
+
+model VehicleType {
+  id            String @id @default(uuid())
+  name          String @db.VarChar(100)
+  availableSeat Int    @db.Integer
+
+  schedules Schedule[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@map("vehicle_types")
+}
+
+model Route {
+  id                 String  @id @default(uuid())
+  durationMinutes    Int     @db.Integer
+  distanceKilometers Decimal @db.Decimal(8, 2)
+
+  originId String
+  origin   City   @relation("OriginCity", fields: [originId], references: [id])
+
+  destinationId String
+  destination   City   @relation("DestinationCity", fields: [destinationId], references: [id])
+
+  schedules Schedule[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@map("routes")
+}
+
+model Schedule {
+  id            String   @id @default(uuid())
+  departureTime DateTime @db.Time()
+  arrivalTime   DateTime @db.Time()
+  price         Int
+
+  routeId String
+  routes  Route  @relation(fields: [routeId], references: [id])
+
+  vehicleTypeId String
+  vehicle_types VehicleType @relation(fields: [vehicleTypeId], references: [id])
+
+  bookings Booking[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@map("schedules")
+}
+
+model Booking {
+  id            String        @id @default(uuid())
+  totalSeat     Int
+  departureDate DateTime      @db.Date
+  totalPrice    Int
+  status        BookingStatus
+
+  userId String
+  users  User   @relation(fields: [userId], references: [id])
+
+  scheduleId String
+  schedules  Schedule @relation(fields: [scheduleId], references: [id])
+
+  passengers Passenger[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@map("bookings")
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRM
+  CANCELLED
+}
+
+model Passenger {
+  id           String @id @default(uuid())
+  name         String
+  idCardNumber String
+
+  bookingId String
+  bookings  Booking @relation(fields: [bookingId], references: [id])
+
+  @@map("passengers")
+}
