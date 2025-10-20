@@ -25,18 +25,19 @@ export async function registerController(req: Request, res: Response) {
 
 export async function loginController(req: Request, res: Response) {
   try {
-    console.log('>>>');
     const { email, password } = req.body;
 
     const safeUser = await loginService({ email, password });
-
     res.status(200).json({
       success: true,
       message: 'Login account successfull',
       data: safeUser,
     });
-  } catch (error) {
-    // console.log(error);
-    res.status(500);
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error?.message,
+      data: null,
+    });
   }
 }

@@ -4,23 +4,35 @@ import { PiPasswordBold } from 'react-icons/pi';
 import Link from 'next/link';
 import { useFormik } from 'formik';
 import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { toast, ToastContainer } from 'react-toastify';
 
 export default function Page() {
+  const router = useRouter();
+
   const formik = useFormik({
     initialValues: {
       email: '',
       password: '',
     },
     onSubmit: async (values) => {
-      await signIn('credentials', {
+      const response = await signIn('credentials', {
         email: values?.email,
         password: values?.password,
+        redirect: false,
       });
+      if (response?.ok) {
+        toast.success('Login account successfull');
+        router.push('/');
+      }
+
+      toast.error(response?.error);
     },
   });
 
   return (
     <div>
+      <ToastContainer />
       {/* Section: Header */}
       <div className='bg-white shadow-xl flex items-center'>
         <Link
