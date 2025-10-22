@@ -12,6 +12,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -57,12 +58,28 @@ model VehicleType {
   availableSeat Int    @db.Integer
 
   schedules Schedule[]
+  vehicle_images VehicleImage[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
   @@map("vehicle_types")
+}
+
+model VehicleImage{
+  id          Int     @id @default(autoincrement())
+  imageUrl    String  
+  description String
+
+  vehicleId   String 
+  vehicle_types   VehicleType   @relation(fields: [vehicleId], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@map("vehicle_images")
 }
 
 model Route {
