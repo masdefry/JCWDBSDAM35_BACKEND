@@ -17,8 +17,9 @@ export const uploaderMulter = (acceptedFiles: string[]) => {
       file: Express.Multer.File,
       cb: (error: Error | null, destination: string) => void
     ) {
+      const fileFormat = file.originalname?.split('.').slice(-1)[0];
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9); // Date.now() in ms
-      cb(null, file.fieldname + '-' + uniqueSuffix); // vehicleImages-Date.now()-Math.random
+      cb(null, `${file.fieldname}-${uniqueSuffix}.${fileFormat}`); // vehicleImages-Date.now()-Math.random
     },
   });
 
@@ -27,12 +28,17 @@ export const uploaderMulter = (acceptedFiles: string[]) => {
     file: Express.Multer.File,
     cb: FileFilterCallback
   ) {
+    const fileFormat = file.originalname?.split('.').slice(-1)[0];
+    if (!acceptedFiles.includes(fileFormat)) {
+      cb(new Error('File type not acceptable'));
+    } 
+
     cb(null, true);
   }
 
   return multer({
     storage: storage,
     fileFilter: fileFilter,
-    limits: { fileSize: 2 * 1024 * 1024 }, // 📝 Each file mus't have limitation size around 2 Megabyte
+    limits: { fileSize: 1 * 1024 * 1024 }, // 📝 Each file mus't have limitation size around 2 Megabyte
   });
 };
