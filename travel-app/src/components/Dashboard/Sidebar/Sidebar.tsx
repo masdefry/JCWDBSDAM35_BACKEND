@@ -1,6 +1,6 @@
 'use client';
 import { HiOutlineHome } from 'react-icons/hi2';
-import { IoIosLogOut } from 'react-icons/io';
+import { BiBus } from "react-icons/bi";
 import { usePathname } from 'next/navigation';
 import { HiOutlineLocationMarker } from 'react-icons/hi';
 import Link from 'next/link';
@@ -12,6 +12,11 @@ const listMenu = [
     href: '/dashboard/travel-routes',
     name: 'Travel Routes',
     icon: HiOutlineLocationMarker,
+  },
+  {
+    href: '/dashboard/vehicle-types',
+    name: 'Vehicle Types',
+    icon: BiBus,
   },
 ];
 
