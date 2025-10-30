@@ -5,19 +5,21 @@ export const createVehicleTypeSchema = Yup.object().shape({
   totalSeat: Yup.string().required('Total seat is required'),
   description: Yup.string().required('Description is required'),
   images: Yup.array()
-    .min(1, 'At least one image selected')
     .of(
       Yup.mixed<File>()
-        .test('limitFileSize', 'Maximum file size is 2mb', (file) => {
-          const maxFileSize = 2 * 1024 * 1024;
-
-          return file && file.size < maxFileSize;
+        .nullable()
+        .test('fileSize', 'Maximum file size is 2MB', (file) => {
+          if (!file) return true; // skip validation if file not present yet
+          const maxSize = 2 * 1024 * 1024; // 2 MB
+          return file.size <= maxSize;
         })
-        .test('fileFormatValidation', 'Format file not accepted', (file) => {
-          const selectedFileFormat = file?.name?.split('.').slice(-1)[0];
-          const acceptedFileFormat = ['jpg', 'jpeg', 'png', 'webp'];
-
-          return file && acceptedFileFormat.includes(selectedFileFormat!);
+        .test('fileFormat', 'Unsupported file format', (file) => {
+          if (!file) return true;
+          const allowedFormats = ['jpg', 'jpeg', 'png', 'webp'];
+          const ext = file.name.split('.').pop()?.toLowerCase();
+          return !!ext && allowedFormats.includes(ext);
         })
-    ),
+    )
+    .min(1, 'At least one image must be selected')
+    .max(3, 'You can only upload up to 3 images'),
 });

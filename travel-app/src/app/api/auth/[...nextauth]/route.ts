@@ -25,7 +25,7 @@ const handler = NextAuth({
         // Naming params tidak harus _ (underscore). Bisa diubah sendiri
         try {
           const response = await axios.post<LoginResponse>(
-            'http://localhost:5000/api/auth/login',
+            'http://localhost:5001/api/auth/login',
             {
               email: _?.email,
               password: _?.password,
@@ -38,6 +38,7 @@ const handler = NextAuth({
             fullName: response?.data?.data?.safeUser?.fullName,
           };
         } catch (error: any) {
+          console.log(error);
           const message =
             error?.response?.data?.message || 'Login failed. Please try again.';
 
@@ -66,13 +67,13 @@ const handler = NextAuth({
       return token;
     },
     async session({ session, token }) {
-      console.log(token);
-      console.log(session);
       if (token && session.user) {
         (session.user as { id: string }).id = token.id as string;
         (session.user as { role: string }).role = token.role as string;
         (session.user as { fullName: string }).fullName =
           token.fullName as string;
+        (session.user as { accessToken: string }).accessToken =
+          token.accessToken as string;
       }
 
       return session;
@@ -81,3 +82,8 @@ const handler = NextAuth({
 });
 
 export { handler as GET, handler as POST };
+
+
+
+
+// 0 || 1000; // truthy falsy -> Nilai non-boolean yg di konversi menjadi nilai boolean

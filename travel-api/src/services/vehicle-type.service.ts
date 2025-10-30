@@ -28,7 +28,7 @@ export async function createVehicleTypeService({
       return {
         imageUrl: file?.filename,
         description,
-        vehicleId: 'xxx',
+        vehicleId: createdVehicleType?.id,
       };
     });
 

@@ -12,7 +12,7 @@ declare module "next-auth" {
       id: string;
       role: string;
       fullName: string;
-      token: string;
+      accessToken: string;
     } & DefaultSession["user"];
   }
 
