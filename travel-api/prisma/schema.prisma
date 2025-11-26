@@ -22,6 +22,7 @@ model User {
   password    String
   phoneNumber String @db.VarChar(15)
   role        UserRole  @default(USER)
+  isVerified  Boolean   @default(false)
 
   bookings Booking[]
 

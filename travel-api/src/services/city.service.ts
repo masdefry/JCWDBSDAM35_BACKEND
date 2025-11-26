@@ -12,3 +12,7 @@ export async function createCityService({
         }
     })
 }
+
+export async function getCityService(){
+    return await prisma.city.findMany()
+}

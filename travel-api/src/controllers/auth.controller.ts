@@ -1,5 +1,9 @@
 import { Request, Response } from 'express';
-import { loginService, registerService } from '../services/auth.service';
+import {
+  loginService,
+  registerService,
+  verifyEmailService,
+} from '../services/auth.service';
 
 export async function registerController(req: Request, res: Response) {
   try {
@@ -40,4 +44,16 @@ export async function loginController(req: Request, res: Response) {
       data: null,
     });
   }
+}
+
+export async function verifyEmailController(req: Request, res: Response) {
+  const payload = res.locals?.payload;
+
+  await verifyEmailService({ id: payload?.userId });
+
+  res.status(200).json({
+    success: true,
+    message: 'Email verification successfull',
+    data: null,
+  });
 }

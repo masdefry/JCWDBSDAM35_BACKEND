@@ -4,7 +4,6 @@ import jwt from 'jsonwebtoken';
 export const jwtVerify = (jwtSecretKey: string) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     const token = req?.headers?.authorization?.split(' ')[1]; // [Bearer, eyxxxx]
-
     if (!token) {
       res.status(401).json({
         success: false,

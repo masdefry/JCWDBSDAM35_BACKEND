@@ -3,30 +3,12 @@ import authRouter from './routers/auth.router';
 import cityRouter from './routers/city.router';
 import travelRouteRouter from './routers/travel-route.router';
 import vehicleTypeRouter from './routers/vehicle-type.router';
-import cors from 'cors';
+import { customCors } from './middlewares/cors.middleware';
 
 const app: Express = express();
 
-var whitelist = [
-  process.env.CORS_WHITELIST_URL_1,
-  process.env.CORS_WHITELIST_URL_2,
-  
-];
-var corsOptions = {
-  origin: function (origin: any, callback: any) {
-    // ⚠️ FOR DEVELOPMENT PHASE ONLY!
-    if (!origin) {
-      return callback(null, true);
-    }
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-};
 // app.use(cors()); // Default config, artinya API akan memberikan izin sharing resource dari client manapun
-app.use(cors(corsOptions));
+app.use(customCors);
 app.use(express.json());
 const port = 5001;
 

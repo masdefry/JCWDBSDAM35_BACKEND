@@ -5,13 +5,15 @@ export const createTravelRouteValidator = [
     .notEmpty()
     .withMessage('Distance is required')
     .isInt({ gt: 0 })
-    .withMessage('Distance must be number and positive number'),
+    .withMessage('Distance must be number and positive number')
+    .toInt(),
 
   body('durationMinutes')
     .notEmpty()
     .withMessage('Duration is required')
     .isInt({ gt: 0 })
-    .withMessage('Duration must be number and positive number'),
+    .withMessage('Duration must be number and positive number')
+    .toInt(),
 
   body('originId')
     .notEmpty()

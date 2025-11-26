@@ -29,6 +29,12 @@ const handler = NextAuth({
             {
               email: _?.email,
               password: _?.password,
+            },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                'X-Internal-Auth': process.env.NEXTAUTH_INTERNAL_SECRET!,
+              },
             }
           );
           return {
@@ -82,8 +88,5 @@ const handler = NextAuth({
 });
 
 export { handler as GET, handler as POST };
-
-
-
 
 // 0 || 1000; // truthy falsy -> Nilai non-boolean yg di konversi menjadi nilai boolean

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createCityService } from '../services/city.service';
+import { createCityService, getCityService } from '../services/city.service';
 
 export async function createCityController(req: Request, res: Response) {
   try {
@@ -22,4 +22,14 @@ export async function createCityController(req: Request, res: Response) {
       data: null,
     });
   }
+}
+
+export async function getCityController(_: Request, res: Response){
+  const city = await getCityService()
+
+  res.status(200).json({
+    success: true, 
+    message: 'Get cities successfull', 
+    data: city
+  })
 }
