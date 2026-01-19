@@ -7,10 +7,7 @@ import {
   JWT_VERIFY_EMAIL,
   LINK_VERIFICATION,
 } from '../config/main.config';
-import { emailTransporter } from '../utils/nodemailer-transporter';
-import fs from 'fs/promises';
-import path from 'path';
-import Handlebars from 'handlebars';
+import { sendMailService } from './mail.service';
 
 export async function registerService({
   fullName,
@@ -28,30 +25,18 @@ export async function registerService({
     },
   });
 
-  const templateDir = path.resolve(__dirname, '../templates');
-
-  const templatePath = path.join(templateDir, `email-verification.html`);
-
-  const templateSource = await fs.readFile(templatePath, 'utf8');
-
-  const templateCompiled = await Handlebars.compile(templateSource);
-
   const token = jwtSign({ userId: createdUser?.id }, JWT_VERIFY_EMAIL!, {
     expiresIn: '1d',
   });
-  /*
-    emailUser untuk menggantikan {{emailUser}}
-    linkVerification untuk menggantikan {{linkVerification}}
-  */
-  const templateHtml = templateCompiled({
-    emailUser: email,
-    linkVerification: `${LINK_VERIFICATION}/${token}`,
-  });
 
-  await emailTransporter.sendMail({
-    subject: 'Test-01',
+  await sendMailService({
     to: email,
-    html: templateHtml,
+    subject: 'Email Verification',
+    templateName: 'email-verification.html',
+    replaceable: {
+      emailUser: email,
+      linkVerification: `${LINK_VERIFICATION}/${token}`,
+    },
   });
 }
 
@@ -79,7 +64,7 @@ export async function loginService({
   const token = jwtSign(
     { userId: findUser?.id, role: findUser?.role },
     JWT_SECRET_KEY!,
-    { expiresIn: '1d' }
+    { expiresIn: '1d' },
   );
 
   return {
